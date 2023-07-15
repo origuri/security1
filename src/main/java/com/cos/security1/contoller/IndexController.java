@@ -1,11 +1,18 @@
 package com.cos.security1.contoller;
 
+import com.cos.security1.dto.MemberDto;
+import com.cos.security1.service.MemberService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
+@RequiredArgsConstructor
 public class IndexController {
+
+    private final MemberService memberSerivce;
 
     @GetMapping({"","/"})
     public String index(){
@@ -30,14 +37,21 @@ public class IndexController {
     *   /login 주소는 security가 낚아챔!
     *   - SecurityConfig 설정 후 괜찮아짐.
     * */
-    @GetMapping("/login")
-    public @ResponseBody String login(){
-        return "login";
+    @GetMapping("/loginForm")
+    public String login(){
+        return "loginForm";
     }
 
-    @GetMapping("/join")
-    public @ResponseBody String join(){
-        return "join";
+    @GetMapping("/joinForm")
+    public  String joinForm(){
+        return "joinForm";
+    }
+
+    @PostMapping("/join")
+    public String join(MemberDto memberDto){
+        memberSerivce.join(memberDto);
+        System.out.println(memberDto);
+        return "redirect:/loginForm";
     }
 
     @GetMapping("/joinProc")

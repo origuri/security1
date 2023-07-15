@@ -4,11 +4,25 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SecurityConfig{
+    // 해당 메소드를 ioc에 등록해줌.
+    @Bean
+    public BCryptPasswordEncoder encodePwd(){
+        return new BCryptPasswordEncoder();
+    }
 
+
+
+    /*
+    *
+    * Spring Security는 여러 개의 필터로 구성된 필터 체인을 사용하여 보안 기능을 적용.
+    * 각 필터는 특정한 보안 작업을 수행하고, 필터 체인을 따라 순서대로 처리됨..
+    * SecurityFilterChain은 이러한 필터 체인을 정의하고 구성하는 역할을 담당합니다.
+    * */
    @Bean
    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
        /*
@@ -35,7 +49,7 @@ public class SecurityConfig{
                .anyRequest().permitAll()
                .and()
                .formLogin()
-               .loginPage("/login");
+               .loginPage("/loginForm");
 
        return http.build();
    }
