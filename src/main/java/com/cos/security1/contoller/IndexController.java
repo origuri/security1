@@ -3,6 +3,8 @@ package com.cos.security1.contoller;
 import com.cos.security1.dto.MemberDto;
 import com.cos.security1.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -58,6 +60,18 @@ public class IndexController {
     @GetMapping("/joinProc")
     public @ResponseBody String joinProc(){
         return "회원가입 완료됨!!";
+    }
+
+    @Secured("ROLE_ADMIN") // admin 권한만 가능
+    @GetMapping("/info")
+    public @ResponseBody String info(){
+        return "개인정보";
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')") // admin과 manager만 가능
+    @GetMapping("/data")
+    public @ResponseBody String data(){
+        return "data";
     }
 
 }

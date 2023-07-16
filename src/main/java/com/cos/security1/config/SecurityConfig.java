@@ -2,21 +2,21 @@ package com.cos.security1.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
+// secure(권한 한개만) 어노테이션 활성화, @PreAuthorize(권한 두개 이상) 어노테이션 활성화
+@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class SecurityConfig{
     // 해당 메소드를 ioc에 등록해줌.
     @Bean
     public BCryptPasswordEncoder encodePwd(){
         return new BCryptPasswordEncoder();
     }
-
-
-
     /*
     *
     * Spring Security는 여러 개의 필터로 구성된 필터 체인을 사용하여 보안 기능을 적용.
@@ -43,11 +43,11 @@ public class SecurityConfig{
        *        .loginPage("/loginForm");   : formLogin에서 걸리면 /loginForm 페이지로 이동시킨다.
        *        .loginProcessingUrl("/login")   : /login 주소과 호출이 되면 시큐리티가 낚아채서 대신 로그인을 진행준다.
        *                                          로그인 로직(비밀번호 해시비교 등) 안해줘도 됨.
-       *        .defaultSuccessUrl("/")     : 로그인 성공하면 메인 페이지로 이동시켜줌.
+       *        .defaultSuccessUrl("/")     : 로그인 성공하면 메인 페이지로 이동시켜주거나 로그인 폼의 전 페이지로 보내줌.
        * */
        http.authorizeRequests()
                .antMatchers("/user/**").authenticated()
-               .antMatchers("/manager/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANGER')")
+               .antMatchers("/manager/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')")
                .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
                .anyRequest().permitAll()
                .and()
