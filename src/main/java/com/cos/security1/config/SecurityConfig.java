@@ -1,5 +1,7 @@
 package com.cos.security1.config;
 
+import com.cos.security1.oauth.PrincipalOauth2MemberService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -12,6 +14,8 @@ import org.springframework.security.web.SecurityFilterChain;
 // secure(권한 한개만) 어노테이션 활성화, @PreAuthorize(권한 두개 이상) 어노테이션 활성화
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class SecurityConfig{
+    @Autowired
+    private PrincipalOauth2MemberService principalOauth2MemberService;
     // 해당 메소드를 ioc에 등록해줌.
     @Bean
     public BCryptPasswordEncoder encodePwd(){
@@ -58,8 +62,15 @@ public class SecurityConfig{
                .failureUrl("/")
                .and()
                .oauth2Login()
-               .loginPage("/loginForm"); // 구글 로그인이 완료된 뒤의 후처리가 필요함.
-
+               .loginPage("/loginForm") // 구글로그인 form까지 옴. 후처리 해야 함. oauth2를 쓰면 코드 안받고 바로 엑세스 토큰 + 사용자 프로필 정보를 받아옴.
+                /*
+                *  구글 로그인 과정
+                *  1. 코드받기(구글 회원인 것이 인증 됨) 2. 엑세스토큰(사용자 정보에 접근할 권한을 받음)
+                *  3. 엑세스 토큰으로 사용자 프로필 정보를 가져옴 4-1. 그 정보를 토대로 회원가입을 자동으로 진행시킴
+                *  4-2 : 정보(이메일, 전화번호, 이름, 아이디)가 부족할 수 있음. 쇼핑몰일 경우->(주소), 백화점일 경우 -> 회원 등급(vip)
+                * */
+               .userInfoEndpoint()
+               .userService(principalOauth2MemberService); // oauth2UserService 타입이여야 한다., 여기서 후처리
        return http.build();
    }
 }

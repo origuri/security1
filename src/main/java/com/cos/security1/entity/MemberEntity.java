@@ -22,6 +22,10 @@ public class MemberEntity extends BaseEntity{
     @Column(nullable = false)
     private String role; // ROLE_USER, ROLE_MANAGER, ROLE_ADMIN
 
+    // oauth2를 위한 필드 추가
+    private String provider;    // google. facebook 등등
+    private String prividerId;  // sub값(pk)
+
     public static MemberEntity toJoinEntity(MemberDto memberDto){
         return MemberEntity.builder()
                 .username(memberDto.getUsername())
