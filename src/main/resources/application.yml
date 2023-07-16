@@ -28,6 +28,17 @@ spring:
         format_sql: true
         default_batch_fetch_size: 100
 
+  security:
+    oauth2:
+      client:
+        registration:
+          google: # /oauth2/authorization/google 이 주소를 동작하게 한다.
+            client-id: 487664062068-ah6vdrfqah90hhn2edi1keim9q2eaf18.apps.googleusercontent.com
+            client-secret: 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
+            scope:
+              - email
+              - profile
+
 
 
 logging:
