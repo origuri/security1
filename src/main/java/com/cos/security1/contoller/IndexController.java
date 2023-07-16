@@ -38,9 +38,10 @@ public class IndexController {
     *   - SecurityConfig 설정 후 괜찮아짐.
     * */
     @GetMapping("/loginForm")
-    public String login(){
+    public String loginForm(){
         return "loginForm";
     }
+
 
     @GetMapping("/joinForm")
     public  String joinForm(){

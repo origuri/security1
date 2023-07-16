@@ -30,7 +30,7 @@ public class SecurityConfig{
        * jwt를 사용하면 어느정도 취약점이 보완되기 때문
        * */
        http.csrf().disable();
-
+       System.out.println("여기는 config");
 
        /*
        *  url : /user/~                     : 로그인을 해야 들어올 수 있음.
@@ -40,7 +40,10 @@ public class SecurityConfig{
        *        .and()                      : 다른 설정을 이어서 하겠다.
        *        .formLogin()                : 메서드는 로그인 페이지와 인증 처리를 구성
        *                                      일반적으로 .loginPage("/login")와 함께 사용하여 로그인 페이지의 경로를 설정
-       *        .loginPage("/login");       : formLogin에서 걸리면 /login 페이지로 이동시킨다.
+       *        .loginPage("/loginForm");   : formLogin에서 걸리면 /loginForm 페이지로 이동시킨다.
+       *        .loginProcessingUrl("/login")   : /login 주소과 호출이 되면 시큐리티가 낚아채서 대신 로그인을 진행준다.
+       *                                          로그인 로직(비밀번호 해시비교 등) 안해줘도 됨.
+       *        .defaultSuccessUrl("/")     : 로그인 성공하면 메인 페이지로 이동시켜줌.
        * */
        http.authorizeRequests()
                .antMatchers("/user/**").authenticated()
@@ -49,7 +52,10 @@ public class SecurityConfig{
                .anyRequest().permitAll()
                .and()
                .formLogin()
-               .loginPage("/loginForm");
+               .loginPage("/loginForm")
+               .loginProcessingUrl("/loginProc")
+               .defaultSuccessUrl("/")
+               .failureUrl("/");
 
        return http.build();
    }

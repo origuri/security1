@@ -27,5 +27,7 @@ public class MemberService {
         MemberEntity memberEntity = MemberEntity.toJoinEntity(memberDto);
         // JpaRepository 사용하여 자동 저장.
         memberRepository.save(memberEntity);
+        MemberEntity byUsername = memberRepository.findByUsername(memberDto.getUsername());
+        System.out.println("메소드 잘 나오나 확인용"+byUsername);
     }
 }
