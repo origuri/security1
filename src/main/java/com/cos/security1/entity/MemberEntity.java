@@ -24,7 +24,7 @@ public class MemberEntity extends BaseEntity{
 
     // oauth2를 위한 필드 추가
     private String provider;    // google. facebook 등등
-    private String prividerId;  // sub값(pk)
+    private String providerId;  // sub값(pk)
 
     public static MemberEntity toJoinEntity(MemberDto memberDto){
         return MemberEntity.builder()
