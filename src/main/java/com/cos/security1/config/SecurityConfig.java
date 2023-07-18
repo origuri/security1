@@ -25,7 +25,7 @@ public class SecurityConfig{
     *
     * Spring Security는 여러 개의 필터로 구성된 필터 체인을 사용하여 보안 기능을 적용.
     * 각 필터는 특정한 보안 작업을 수행하고, 필터 체인을 따라 순서대로 처리됨..
-    * SecurityFilterChain은 이러한 필터 체인을 정의하고 구성하는 역할을 담당합니다.
+    * SecurityFilterChain은 이러한 필터 체인을 정의하고 구성하는 역할을 담당.
     * */
    @Bean
    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
