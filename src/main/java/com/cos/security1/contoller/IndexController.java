@@ -1,10 +1,15 @@
 package com.cos.security1.contoller;
 
+import com.cos.security1.auth.PrincipalDetails;
 import com.cos.security1.dto.MemberDto;
 import com.cos.security1.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +20,25 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class IndexController {
 
     private final MemberService memberSerivce;
+
+    @GetMapping("/test/login")
+    public @ResponseBody String testLogin(Authentication authentication, @AuthenticationPrincipal PrincipalDetails userDetails){
+        System.out.println("테스트 로그인================ ");
+        PrincipalDetails principalDetails = (PrincipalDetails)authentication.getPrincipal();
+        System.out.println("autentication -> "+principalDetails.getMemberEntity());
+        System.out.println("userDetail ==>  "+ userDetails.getMemberEntity());
+        return "세션 정보 확인하기 ";
+    }
+
+    @GetMapping("/test/oauth/login")
+    public @ResponseBody String testOauthLogin(Authentication authentication, @AuthenticationPrincipal OAuth2User oAuth){
+        System.out.println("테스트 로그인================ ");
+        OAuth2User oAuth2User = (OAuth2User)authentication.getPrincipal();
+        System.out.println("autentication -> "+oAuth2User.getAttributes());
+        System.out.println("autentication -> "+oAuth.getAttributes());
+
+        return "Oauth 세션 정보 확인하기 ";
+    }
 
     @GetMapping({"","/"})
     public String index(){

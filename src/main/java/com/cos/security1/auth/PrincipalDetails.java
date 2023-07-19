@@ -1,11 +1,15 @@
 package com.cos.security1.auth;
 
 import com.cos.security1.entity.MemberEntity;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
 /*
 *   시큐리티가 /login 주소 요청이 들어오면 낚아채서 로그인을 진행 시킨다.
@@ -17,13 +21,17 @@ import java.util.Collection;
 * */
 
 // userDetails를 상속받음으로써 PrincipalDetails는 userDetails 타입이 되엇음.
-public class PrincipalDetails implements UserDetails {
+@Data
+public class PrincipalDetails implements UserDetails, OAuth2User {
 
     private MemberEntity memberEntity;
 
     public PrincipalDetails(MemberEntity memberEntity) {
         this.memberEntity = memberEntity;
     }
+
+
+
     // 해당 유저의 권한을 리턴하는 메소드
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -86,5 +94,16 @@ public class PrincipalDetails implements UserDetails {
         // 우리 사이트에서 1년동안 회원이 로그인을 안하면 휴먼계정이 되기로 하는 비즈니스 로직이 있을 때 사용.
         // 현재 시간 - 현재 시간 = 1년 이상이면 return false;
         return true;
+    }
+
+    @Override
+    public Map<String, Object> getAttributes() {
+        return null;
+    }
+
+
+    @Override
+    public String getName() {
+        return null;
     }
 }
