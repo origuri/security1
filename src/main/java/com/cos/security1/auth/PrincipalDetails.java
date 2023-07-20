@@ -25,12 +25,18 @@ import java.util.Map;
 public class PrincipalDetails implements UserDetails, OAuth2User {
 
     private MemberEntity memberEntity;
+    private Map<String, Object> attributes;
 
+    // 일반 로그인용
     public PrincipalDetails(MemberEntity memberEntity) {
         this.memberEntity = memberEntity;
     }
 
-
+    // Oauth2 로그인용 생성자 오버로딩
+    public PrincipalDetails(MemberEntity memberEntity, Map<String, Object> attributes) {
+        this.memberEntity = memberEntity;
+        this.attributes = attributes;
+    }
 
     // 해당 유저의 권한을 리턴하는 메소드
     @Override
@@ -96,9 +102,15 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
         return true;
     }
 
+    /*
+    * PrincipalOauth2MemberService의 loadUser의 메소드에서 사용하는
+    * getAttribute 메소드이다.
+    * */
     @Override
     public Map<String, Object> getAttributes() {
-        return null;
+
+        return attributes;
+
     }
 
 
