@@ -21,6 +21,7 @@ import java.util.Map;
 * */
 
 // userDetails를 상속받음으로써 PrincipalDetails는 userDetails 타입이 되엇음.
+// Oauth2도 같이 상속 받음으로써 일반 로그인과 구글 로그인 등을 모두 principalDetails에 위임할 수 있음.
 @Data
 public class PrincipalDetails implements UserDetails, OAuth2User {
 
@@ -112,7 +113,6 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
         return attributes;
 
     }
-
 
     @Override
     public String getName() {
