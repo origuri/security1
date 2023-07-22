@@ -33,13 +33,17 @@ public class PrincipalOauth2MemberService extends DefaultOAuth2UserService {
             role     = ROLE_USER
 
         * */
+
+        OAuth2User oauth2User = super.loadUser(userRequest);
         // 구글 로그인 버튼 -> 구글 로그인 창 -> 로그인 완료 -> code를 리턴(OAuth client 라이브러리가 받아줌)
         // -> AccessToken을 요청해서 받는 것이 userRequest의 정보가 들어있음.
         // => userRequest 정보로 loadUser 함수를 호출하고 구글로 부터 회원프로필을 받음
         System.out.println("userRequest -> "+ super.loadUser(userRequest).getAttributes());
 
-        OAuth2User oauth2User = super.loadUser(userRequest);
+        String provider = userRequest.getClientRegistration().getClientId();
+        String providerId = oauth2User.getAttribute("sub");
 
+        // 회원가입을 강제로 진행해볼 예정
         return super.loadUser(userRequest);
     }
 }
