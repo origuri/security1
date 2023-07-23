@@ -2,6 +2,8 @@ package com.cos.security1.oauth;
 
 import com.cos.security1.auth.PrincipalDetails;
 import com.cos.security1.entity.MemberEntity;
+import com.cos.security1.oauth.provider.GoogleMemberInfo;
+import com.cos.security1.oauth.provider.OAuth2MemberInfo;
 import com.cos.security1.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -54,13 +56,17 @@ public class PrincipalOauth2MemberService extends DefaultOAuth2UserService {
         System.out.println("getAttribute -> "+ oauth2User.getAttributes());// 위에랑 같은 의미
 
         // 아래 정보로 구글 간편로그인으로 강제 회원가입 진행
+        OAuth2MemberInfo oAuth2MemberInfo = null;
+        if(userRequest.getClientRegistration().getRegistrationId().equals("google")){
+            oAuth2MemberInfo = new GoogleMemberInfo(oauth2User.getAttributes());
+        }
 
         // google
-        String provider = userRequest.getClientRegistration().getClientId();
+        String provider = oAuth2MemberInfo.getProvider();
         // sub의 숫자값.
-        String providerId = oauth2User.getAttribute("sub");
+        String providerId = oAuth2MemberInfo.getProviderId();
         // 이메일
-        String email = oauth2User.getAttribute("email");
+        String email = oAuth2MemberInfo.getEmail();
         // username이 겹치지 않게 uid를 만들어준다.
         // google_123412341234
         String username = provider+"_"+providerId;
@@ -78,6 +84,7 @@ public class PrincipalOauth2MemberService extends DefaultOAuth2UserService {
             System.out.println("이미 구글로 회원가입 했습니다. ");
         }
         // 두개의 객체가 authentication 객체 안으로 들어간다. 세션 안으로 들어감.
+        // principalDetails에서 만든 구글로그인용 생성자.
         return new PrincipalDetails(memberEntity, oauth2User.getAttributes());
     }
 }

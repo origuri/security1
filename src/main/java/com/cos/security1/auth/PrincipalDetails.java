@@ -26,7 +26,7 @@ import java.util.Map;
 public class PrincipalDetails implements UserDetails, OAuth2User {
 
     private MemberEntity memberEntity;
-    private Map<String, Object> attributes;
+    private Map<String, Object> attributes; // Oauth용
 
     // 일반 로그인용
     public PrincipalDetails(MemberEntity memberEntity) {
