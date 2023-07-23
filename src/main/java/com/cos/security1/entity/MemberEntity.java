@@ -35,4 +35,14 @@ public class MemberEntity extends BaseEntity{
                 .build();
     }
 
+    public static MemberEntity toJoinGoogleEntity(String username, String password, String email, String role, String provider, String providerId) {
+        return MemberEntity.builder()
+                .username(username)
+                .password(password)
+                .email(email)
+                .role(role)
+                .provider(provider)
+                .providerId(providerId)
+                .build();
+    }
 }

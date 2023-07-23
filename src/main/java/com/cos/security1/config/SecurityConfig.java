@@ -17,10 +17,7 @@ public class SecurityConfig{
     @Autowired
     private PrincipalOauth2MemberService principalOauth2MemberService;
     // 해당 메소드를 ioc에 등록해줌.
-    @Bean
-    public BCryptPasswordEncoder encodePwd(){
-        return new BCryptPasswordEncoder();
-    }
+
     /*
     *
     * Spring Security는 여러 개의 필터로 구성된 필터 체인을 사용하여 보안 기능을 적용.

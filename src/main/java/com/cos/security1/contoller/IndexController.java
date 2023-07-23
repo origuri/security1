@@ -45,8 +45,11 @@ public class IndexController {
         return "index";
     }
 
+    // Oauth 로그인, 일반 로그인 전부 PrincipalDetails로 받을 수 잇음.
+    //
     @GetMapping("/user")
-    public @ResponseBody String user(){
+    public @ResponseBody String user(@AuthenticationPrincipal PrincipalDetails principalDetails){
+        System.out.println("principaDetails => "+principalDetails.getMemberEntity());
         return "user";
     }
 
