@@ -3,6 +3,7 @@ package com.cos.security1.oauth;
 import com.cos.security1.auth.PrincipalDetails;
 import com.cos.security1.entity.MemberEntity;
 import com.cos.security1.oauth.provider.GoogleMemberInfo;
+import com.cos.security1.oauth.provider.NaverMemberInfo;
 import com.cos.security1.oauth.provider.OAuth2MemberInfo;
 import com.cos.security1.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,8 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -58,17 +61,32 @@ public class PrincipalOauth2MemberService extends DefaultOAuth2UserService {
         // 아래 정보로 구글 간편로그인으로 강제 회원가입 진행
         OAuth2MemberInfo oAuth2MemberInfo = null;
         if(userRequest.getClientRegistration().getRegistrationId().equals("google")){
+            System.out.println("구글 로그인 요청");
             oAuth2MemberInfo = new GoogleMemberInfo(oauth2User.getAttributes());
+        } else if(userRequest.getClientRegistration().getRegistrationId().equals("naver")){
+            System.out.println("네이버 로그인 요청");
+            /*
+            * { resultcode=00,
+            *   message=success,
+            *   response={
+            *           id=xyfvn4CA14Hi2QLQgfpKG9348F9wX5OpzN52gTLcngM,
+            *           email=dlcksrb7@naver.com,
+            *           name=이찬규}}
+            *   response라는 키 값안에 들어있기 때문에 map으로 형변환하고 키값으로 꺼내서 넣어줘야 바로 사용가능.
+            * */
+            oAuth2MemberInfo = new NaverMemberInfo((Map)oauth2User.getAttributes().get("response") );
+        } else{
+            System.out.println("우리는 구글하고 네이버만 지원해요~");
         }
 
-        // google
+        // google, naver
         String provider = oAuth2MemberInfo.getProvider();
-        // sub의 숫자값.
+        // sub, id의 숫자값.
         String providerId = oAuth2MemberInfo.getProviderId();
         // 이메일
         String email = oAuth2MemberInfo.getEmail();
         // username이 겹치지 않게 uid를 만들어준다.
-        // google_123412341234
+        // google_123412341234, naver_123412341234
         String username = provider+"_"+providerId;
         // 구글로 간편로그인을 하면 비밀번호가 필요없지만 그냥 넣어줌. 의미없음
         String password = bCryptPasswordEncoder.encode("겟인데어");
@@ -77,11 +95,11 @@ public class PrincipalOauth2MemberService extends DefaultOAuth2UserService {
         // 이미 구글로 회원가입 했는지 확인한다.
         MemberEntity memberEntity = memberRepository.findByUsername(username);
         if(memberEntity == null) {
-            System.out.println("구글로그인이 최초입니다.");
-            memberEntity = MemberEntity.toJoinGoogleEntity(username, password, email, role, provider, providerId);
+            System.out.println("간편로그인이 최초입니다.");
+            memberEntity = MemberEntity.toJoinOauth2Entity(username, password, email, role, provider, providerId);
             memberRepository.save(memberEntity);
         } else{
-            System.out.println("이미 구글로 회원가입 했습니다. ");
+            System.out.println("이미 간편로그인으로 회원가입 했습니다. ");
         }
         // 두개의 객체가 authentication 객체 안으로 들어간다. 세션 안으로 들어감.
         // principalDetails에서 만든 구글로그인용 생성자.

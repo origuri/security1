@@ -35,7 +35,7 @@ public class MemberEntity extends BaseEntity{
                 .build();
     }
 
-    public static MemberEntity toJoinGoogleEntity(String username, String password, String email, String role, String provider, String providerId) {
+    public static MemberEntity toJoinOauth2Entity(String username, String password, String email, String role, String provider, String providerId) {
         return MemberEntity.builder()
                 .username(username)
                 .password(password)
